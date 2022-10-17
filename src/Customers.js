@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Customers.css';
 import CustomerCard from './CustomerCard.js';
 import CustomerForm from './CustomerForm.js';
@@ -9,6 +9,14 @@ function Customers() {
     const [showForm, setShowForm] = useState(false);
     const [scopedCustomer, setScopedCustomer] = useState({});
     const [error, setError] = useState();
+
+    useEffect(() => {
+        fetch("http://localhost:8080/customers")
+        .then(response => response.json())
+        .then(result => setCustomers(result))
+        .catch(console.log)
+
+    }, []);
 
     function fetchByLevel(evt) {
         if (evt.target.value === "") {
@@ -64,6 +72,10 @@ function Customers() {
             case "delete":
                 setCustomers(customers.filter(e => e.customerId !== customer.customerId));
                 break;
+            default:
+                console.log("INVALID ACTION!", action);
+                console.log("also this... INVALID ACTION!" + action);
+                alert("INVALID ACTION! " + action);
         }
         
         setError("");
